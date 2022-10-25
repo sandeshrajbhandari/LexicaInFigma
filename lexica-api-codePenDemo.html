@@ -1,0 +1,34 @@
+#main-section { display: flex; flex-wrap: wrap; justify-content: center; } img {
+height: 200px; width: 200px; object-fit: cover; margin: 0.4em; border-radius:
+0.5em; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 /
+0.4); }
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lexica Demo</title>
+  </head>
+  <body>
+    <section id="main-section">
+      <!--     <div class="modal">
+      <img src="https://image.lexica.art/md/bbaa8be0-a714-43b1-b85d-179b26b8488d" >
+    </div> -->
+    </section>
+  </body>
+</html>
+
+async function fetchData(urlParam) { //returns array let objArr; await
+fetch(urlParam) .then(function (response) { return response.json(); })
+.then(function (data) { //call the createImage function with the image link
+objArr = data.images; // console.log(data.images[0].src); // console.log(temp);
+// createImage(data.results[0].image_url); }); objArr.forEach(obj=> {
+createImage(obj.src); }) } let objArr =
+fetchData("https://lexica.art/api/v1/search?q=apples") function
+createImage(link) { var img = document.createElement("img"); img.src = link;
+//create a div element with modal class var div = document.createElement("div");
+div.className = "modal"; //append the image to the div div.appendChild(img);
+//append the div to the section with main-section id
+document.getElementById("main-section").appendChild(div); }

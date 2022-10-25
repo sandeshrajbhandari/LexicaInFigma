@@ -1,0 +1,48 @@
+<h2>Rectangle Creator</h2>
+<p>Count: <input id="count" value="5" /></p>
+<img id="domImg" src="https://lexica.art/programmer.jpg" />
+<button id="create">Create</button>
+<button id="cancel">Cancel</button>
+<button id="create-images">Create Images</button>
+<!-- script start -->
+<script>
+  console.log(this);
+  document.getElementById("create").onclick = () => {
+    const textbox = document.getElementById("count");
+    const count = parseInt(textbox.value, 10);
+    parent.postMessage(
+      { pluginMessage: { type: "create-rectangles", count } },
+      "*"
+    );
+  };
+
+  document.getElementById("cancel").onclick = () => {
+    parent.postMessage({ pluginMessage: { type: "cancel" } }, "*");
+  };
+  // changing opacity with custom code, based on document selection eg.
+  document.getElementById("create-images").onclick = () => {
+    const imgSrc = document.getElementById("domImg").src;
+    // r.arrayBuffer()
+    fetch(imgSrc)
+      .then((r) => {
+        // console.log(r.arrayBuffer());
+        return r.arrayBuffer();
+      })
+      .then((a) => {
+        parent.postMessage(
+          {
+            pluginMessage: {
+              type: "create-images",
+              a: a,
+              imgData: new Uint8Array(a),
+            },
+          },
+          "*"
+        );
+      });
+    // parent.postMessage(
+    //   { pluginMessage: { type: "create-images", imgSrc } },
+    //   "*"
+    // );
+  };
+</script>
