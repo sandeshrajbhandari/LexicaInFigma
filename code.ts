@@ -7,6 +7,7 @@
 
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__);
+figma.ui.resize(500, 500);
 
 // Calls to "parent.postMessage" from within the HTML page will trigger this
 // callback. The callback will be passed the "pluginMessage" property of the
@@ -27,10 +28,16 @@ figma.ui.onmessage = (msg) => {
     // }
     // const rect = figma.createRectangle();
     // rect.x = 150;
-    addImageToCanvas(msg.imgata);
+    // addImageToCanvas(msg.imgData);
+    console.log(msg.imgData);
     console.log("test");
   }
-
+  if (msg.type === "download-mult-images") {
+    // addImageToCanvas(msg.imgData);
+    // console.log(msg.dataArr[0]);
+    msg.dataArr.map((image: Uint8Array) => addImageToCanvas(image));
+    // console.log([msg.imgData, msg.imgData, msg.imgData]);
+  }
   function addImageToCanvas(data: Uint8Array) {
     let imageHash = figma.createImage(data).hash;
     const rect = figma.createRectangle();

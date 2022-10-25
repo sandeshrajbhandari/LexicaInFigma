@@ -1,48 +1,233 @@
-<h2>Rectangle Creator</h2>
-<p>Count: <input id="count" value="5" /></p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>LexicaInFigma</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --imgSize: 100px;
+        --white: #ffffff;
+      }
+      #main-section {
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      img {
+        height: var(--imgSize);
+        width: var(--imgSize);
+        object-fit: cover;
+        margin: 0.2em;
+        border-radius: 0.5em;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.4),
+          0 4px 6px -4px rgb(0 0 0 / 0.4);
+      }
+      img:hover {
+        opacity: 0.5;
+      }
+      img:active {
+        opacity: 0.8;
+      }
+      .selectImage {
+        opacity: 0.2;
+      }
+      .sticky {
+        position: -webkit-sticky; /* Safari */
+        position: sticky;
+        top: 0;
+        min-height: 40px;
+        background-color: bisque;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+      }
+      .sticky button {
+        padding: 10px 20px;
+        background-color: #3485fd;
+        color: white;
+        border: none;
+        border-radius: 0.4em;
+      }
+      .sticky button:hover {
+        background-color: #2a6ed1;
+      }
+    </style>
+    <!-- <link rel="stylesheet" href="/style.css" /> -->
+  </head>
+  <body>
+    <!-- <p>Count: <input id="count" value="5" /></p>
 <img id="domImg" src="https://lexica.art/programmer.jpg" />
 <button id="create">Create</button>
 <button id="cancel">Cancel</button>
-<button id="create-images">Create Images</button>
-<!-- script start -->
-<script>
-  console.log(this);
-  document.getElementById("create").onclick = () => {
-    const textbox = document.getElementById("count");
-    const count = parseInt(textbox.value, 10);
-    parent.postMessage(
-      { pluginMessage: { type: "create-rectangles", count } },
-      "*"
-    );
-  };
+<button id="create-images">Create Images</button> -->
+    <!-- OLD CODE BEFORE THIS, new Code after this from codepen, changed to work with plugin -->
+    <section class="sticky">
+      <h2>LexicaInFigma</h2>
+      <button id="imageDownload" class="btn btn-primary">Download</button>
+    </section>
+    <section id="main-section">
+      <!--     <div class="modal">
+        <img src="https://image.lexica.art/md/bbaa8be0-a714-43b1-b85d-179b26b8488d" >
+      </div> -->
+    </section>
 
-  document.getElementById("cancel").onclick = () => {
-    parent.postMessage({ pluginMessage: { type: "cancel" } }, "*");
-  };
-  // changing opacity with custom code, based on document selection eg.
-  document.getElementById("create-images").onclick = () => {
-    const imgSrc = document.getElementById("domImg").src;
-    // r.arrayBuffer()
-    fetch(imgSrc)
-      .then((r) => {
-        // console.log(r.arrayBuffer());
-        return r.arrayBuffer();
-      })
-      .then((a) => {
-        parent.postMessage(
-          {
-            pluginMessage: {
-              type: "create-images",
-              a: a,
-              imgData: new Uint8Array(a),
-            },
-          },
-          "*"
-        );
+    <!-- script start -->
+    <script>
+      console.log(this);
+      // document.getElementById("create").onclick = () => {
+      //   const textbox = document.getElementById("count");
+      //   const count = parseInt(textbox.value, 10);
+      //   parent.postMessage(
+      //     { pluginMessage: { type: "create-rectangles", count } },
+      //     "*"
+      //   );
+      // };
+
+      // document.getElementById("cancel").onclick = () => {
+      //   parent.postMessage({ pluginMessage: { type: "cancel" } }, "*");
+      // };
+      // changing opacity with custom code, based on document selection eg.
+      // document.getElementById("create-images").onclick = () => {
+      //   const imgSrc = document.getElementById("domImg").src;
+      //   // r.arrayBuffer()
+      //   fetch(imgSrc)
+      //     .then((r) => {
+      //       // console.log(r.arrayBuffer());
+      //       return r.arrayBuffer();
+      //     })
+      //     .then((a) => {
+      //       parent.postMessage(
+      //         {
+      //           pluginMessage: {
+      //             type: "create-images",
+      //             a: a,
+      //             imgData: new Uint8Array(a),
+      //           },
+      //         },
+      //         "*"
+      //       );
+      //     });
+      // parent.postMessage(
+      //   { pluginMessage: { type: "create-images", imgSrc } },
+      //   "*"
+      // );
+      // };
+    </script>
+    <!-- SECOND SCRIPT TAG FOR INTERACTIVITY CODE FROM CODEPEN ASIDE FROM FIGMA PLUGIN POSTMESSAGE CODE -->
+    <script>
+      async function fetchData(urlParam) {
+        //returns array
+        let objArr;
+        await fetch(urlParam)
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (data) {
+            //call the createImage function with the image link
+            objArr = data.images; // console.log(data.images[0].src);
+            // console.log(temp);
+            // createImage(data.results[0].image_url);
+          });
+        objArr.forEach((obj) => {
+          createImage(obj.src);
+        });
+      }
+      let objArr = fetchData(
+        "https://lexica.art/api/v1/search?q=motion graphics beeple"
+      );
+
+      function createImage(link) {
+        var img = document.createElement("img");
+        img.src = link;
+        //create a div element with modal class
+        var div = document.createElement("div");
+        div.className = "modal";
+        //append the image to the div
+        div.appendChild(img);
+        //append the div to the section with main-section id
+        document.getElementById("main-section").appendChild(div);
+      }
+
+      // add and remove classes on click, so later fetch image links with the classes selectImage
+      document.addEventListener("click", function (e) {
+        if (e.target && e.target.nodeName == "IMG") {
+          e.target.classList.toggle("selectImage");
+        }
       });
-    // parent.postMessage(
-    //   { pluginMessage: { type: "create-images", imgSrc } },
-    //   "*"
-    // );
-  };
-</script>
+
+      document.getElementById("imageDownload").onclick = () => {
+        // console.log(document.getElementsByClassName("selectImage"));
+        let selectedImages = document.getElementsByClassName("selectImage");
+        let selectedImagesArr = [];
+        for (let i = 0; i < selectedImages.length; i++) {
+          selectedImagesArr.push(selectedImages[i].src);
+        }
+        createImages(selectedImagesArr).then((dataArr) =>
+          parent.postMessage(
+            {
+              pluginMessage: {
+                type: "download-mult-images",
+                dataArr: dataArr,
+              },
+            },
+            "*"
+          )
+        );
+        // downloadImages(selectedImagesArr);
+        // console.log("dataArr: " + dataArr);
+
+        // console.log(selectedImagesArr);
+      };
+
+      function downloadImages(selectedImagesArr) {
+        // console.log(selectedImagesArr);
+        let imgDataArr = [];
+        selectedImagesArr.forEach((img) => {
+          fetch(img)
+            .then((r) => {
+              return r.arrayBuffer();
+            })
+            .then((a) => {
+              parent.postMessage(
+                {
+                  pluginMessage: {
+                    type: "create-images",
+                    imgData: new Uint8Array(a),
+                  },
+                },
+                "*"
+              );
+            });
+        });
+        return imgDataArr;
+      }
+      async function createImages(selectedImagesArr) {
+        // console.log(selectedImagesArr);
+        let imgDataArr = [];
+        let count = 1;
+        const promises = selectedImagesArr.map(async (img) => {
+          let result = await fetch(img)
+            .then((r) => {
+              console.log(count);
+              count++;
+              return r.arrayBuffer();
+            })
+            .then((a) => {
+              return new Uint8Array(a);
+            });
+          return result;
+        });
+        imgDataArr = await Promise.all(promises);
+        console.log("finish");
+        // console.log(imgDataArr);
+        return imgDataArr;
+      }
+    </script>
+  </body>
+</html>
