@@ -58,7 +58,6 @@
         background-color: #2a6ed1;
       }
     </style>
-    <!-- <link rel="stylesheet" href="/style.css" /> -->
   </head>
   <body>
     <!-- <p>Count: <input id="count" value="5" /></p>
@@ -71,6 +70,10 @@
       <h2>LexicaInFigma</h2>
       <button id="imageDownload" class="btn btn-primary">Download</button>
     </section>
+    <section class="sticky">
+      <input type="text" id="searchInput" placeholder="Search" />
+      <button id="search">Search</button>
+    </section>
     <section id="main-section">
       <!--     <div class="modal">
         <img src="https://image.lexica.art/md/bbaa8be0-a714-43b1-b85d-179b26b8488d" >
@@ -80,44 +83,6 @@
     <!-- script start -->
     <script>
       console.log(this);
-      // document.getElementById("create").onclick = () => {
-      //   const textbox = document.getElementById("count");
-      //   const count = parseInt(textbox.value, 10);
-      //   parent.postMessage(
-      //     { pluginMessage: { type: "create-rectangles", count } },
-      //     "*"
-      //   );
-      // };
-
-      // document.getElementById("cancel").onclick = () => {
-      //   parent.postMessage({ pluginMessage: { type: "cancel" } }, "*");
-      // };
-      // changing opacity with custom code, based on document selection eg.
-      // document.getElementById("create-images").onclick = () => {
-      //   const imgSrc = document.getElementById("domImg").src;
-      //   // r.arrayBuffer()
-      //   fetch(imgSrc)
-      //     .then((r) => {
-      //       // console.log(r.arrayBuffer());
-      //       return r.arrayBuffer();
-      //     })
-      //     .then((a) => {
-      //       parent.postMessage(
-      //         {
-      //           pluginMessage: {
-      //             type: "create-images",
-      //             a: a,
-      //             imgData: new Uint8Array(a),
-      //           },
-      //         },
-      //         "*"
-      //       );
-      //     });
-      // parent.postMessage(
-      //   { pluginMessage: { type: "create-images", imgSrc } },
-      //   "*"
-      // );
-      // };
     </script>
     <!-- SECOND SCRIPT TAG FOR INTERACTIVITY CODE FROM CODEPEN ASIDE FROM FIGMA PLUGIN POSTMESSAGE CODE -->
     <script>
@@ -134,6 +99,7 @@
             // console.log(temp);
             // createImage(data.results[0].image_url);
           });
+        document.getElementById("main-section").innerHTML = "";
         objArr.forEach((obj) => {
           createImage(obj.src);
         });
@@ -228,6 +194,15 @@
         // console.log(imgDataArr);
         return imgDataArr;
       }
+
+      // 08-11-022 code for search bar interactivity
+      document.getElementById("search").onclick = () => {
+        let searchQuery = document.getElementById("searchInput").value;
+        console.log(searchQuery);
+        let objArr = fetchData(
+          "https://lexica.art/api/v1/search?q=" + searchQuery
+        );
+      };
     </script>
   </body>
 </html>
