@@ -41,8 +41,9 @@
         position: -webkit-sticky; /* Safari */
         position: sticky;
         top: 0;
+        padding: 0.2em 1em;
         min-height: 40px;
-        background-color: bisque;
+        background-color: rgba(94 234 212 / 0.5);
         display: flex;
         justify-content: space-around;
         align-items: center;
@@ -52,10 +53,16 @@
         background-color: #3485fd;
         color: white;
         border: none;
-        border-radius: 0.4em;
+        border-radius: 0.6em;
       }
       .sticky button:hover {
         background-color: #2a6ed1;
+      }
+      #searchInput {
+        padding: 0.5em 0.5em;
+        /* border: none; */
+        border-radius: 0.4em;
+        /* outline: none; */
       }
     </style>
   </head>
@@ -66,14 +73,16 @@
 <button id="cancel">Cancel</button>
 <button id="create-images">Create Images</button> -->
     <!-- OLD CODE BEFORE THIS, new Code after this from codepen, changed to work with plugin -->
-    <section class="sticky">
-      <h2>LexicaInFigma</h2>
+    <form class="sticky" id="formId">
+      <input
+        type="text"
+        id="searchInput"
+        size="25"
+        placeholder="motion graphics beeple"
+      />
+      <button id="search" type="submit">Search</button>
       <button id="imageDownload" class="btn btn-primary">Download</button>
-    </section>
-    <section class="sticky">
-      <input type="text" id="searchInput" placeholder="Search" />
-      <button id="search">Search</button>
-    </section>
+    </form>
     <section id="main-section">
       <!--     <div class="modal">
         <img src="https://image.lexica.art/md/bbaa8be0-a714-43b1-b85d-179b26b8488d" >
@@ -134,6 +143,8 @@
         for (let i = 0; i < selectedImages.length; i++) {
           selectedImagesArr.push(selectedImages[i].src);
         }
+        console.log(selectedImagesArr[0]);
+        console.log("test");
         createImages(selectedImagesArr).then((dataArr) =>
           parent.postMessage(
             {
@@ -180,6 +191,7 @@
         const promises = selectedImagesArr.map(async (img) => {
           let result = await fetch(img)
             .then((r) => {
+              console.log(r);
               console.log(count);
               count++;
               return r.arrayBuffer();
@@ -196,7 +208,16 @@
       }
 
       // 08-11-022 code for search bar interactivity
-      document.getElementById("search").onclick = () => {
+      // document.getElementById("search").onclick = () => {
+      //   let searchQuery = document.getElementById("searchInput").value;
+      //   console.log(searchQuery);
+      //   let objArr = fetchData(
+      //     "https://lexica.art/api/v1/search?q=" + searchQuery
+      //   );
+      // };
+      // changed the code to respond when input and entered.
+      document.getElementById("formId").onsubmit = (e) => {
+        e.preventDefault();
         let searchQuery = document.getElementById("searchInput").value;
         console.log(searchQuery);
         let objArr = fetchData(

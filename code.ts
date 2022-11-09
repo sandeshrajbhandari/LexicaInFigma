@@ -35,12 +35,17 @@ figma.ui.onmessage = (msg) => {
   if (msg.type === "download-mult-images") {
     // addImageToCanvas(msg.imgData);
     // console.log(msg.dataArr[0]);
-    msg.dataArr.map((image: Uint8Array) => addImageToCanvas(image));
+    // msg.dataArr.map((image: Uint8Array) => addImageToCanvas(image));
+    for (let i = 0; i < msg.dataArr.length; i++) {
+      addImageToCanvas(msg.dataArr[i], i);
+    }
     // console.log([msg.imgData, msg.imgData, msg.imgData]);
   }
-  function addImageToCanvas(data: Uint8Array) {
+  function addImageToCanvas(data: Uint8Array, i: number) {
     let imageHash = figma.createImage(data).hash;
     const rect = figma.createRectangle();
+    // rect.resize();
+    rect.x = i * 101;
     rect.fills = [{ type: "IMAGE", scaleMode: "FILL", imageHash }];
     figma.currentPage.appendChild(rect);
 
